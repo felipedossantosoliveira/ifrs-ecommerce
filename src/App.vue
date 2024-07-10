@@ -1,8 +1,16 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { useRoute } from 'vue-router'
+import CartView from './views/CartView.vue'
+import { ref } from 'vue';
 
 const route = useRoute()
+
+const showCart = ref(false)
+
+function toggleCart() {
+  showCart.value = !showCart.value
+}
 </script>
 
 <template>
@@ -59,6 +67,13 @@ const route = useRoute()
                 </span>
               </router-link>
             </li>
+            <li class="group">
+              <button @click="toggleCart">
+                <span class="border border-transparent group-hover:bg-gray-400 group-hover:text-white group-hover:border-black px-0.5 uppercase">
+                  cart
+                </span>
+              </button>
+            </li>
           </ul>
         </nav>
       </div>
@@ -69,4 +84,6 @@ const route = useRoute()
   <div class="mt-10">
     <RouterView />
   </div>
+
+  <CartView v-if="showCart" @close="toggleCart" />
 </template>

@@ -14,11 +14,22 @@ export function login(form, router, callback = () => {}) {
 	axios.post(import.meta.env.VITE_BACKEND_URL + 'auth/login', form.value)
 		.then(res => {
 			setItemWithExpiry('token', res.data.data.token, res.data.data.expiresIn)
+			loadCart();
 			router.push({ name: 'home' })
 		})
 		.catch(err => {
 			callback(err);
 		})
+}
+
+function loadCart() {
+	axios({
+		method: 'get',
+		url: import.meta.env.VITE_BACKEND_URL + 'cart',
+		headers:{
+			Authorization: `Bearer ${getToken()}`
+		}
+	})
 }
 
 export function logout(router, refresh = false) {

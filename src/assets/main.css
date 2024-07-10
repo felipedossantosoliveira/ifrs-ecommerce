@@ -17,6 +17,6 @@
     font-family: 'Victor Mono', monospace;
 }
 
-div,button,span{
+div,button,span,img,h1,h2,h3,h4,h5,h6,p,a {
     @apply border-neutral-500/50;
 }
