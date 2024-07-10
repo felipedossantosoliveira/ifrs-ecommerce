@@ -1,4 +1,5 @@
 import axios from "axios"
+import { nextTick } from "vue";
 
 export function register(form, router, callback = () => {}) {
 	axios.post(import.meta.env.VITE_BACKEND_URL + 'auth/sign-up', form.value)
@@ -10,15 +11,16 @@ export function register(form, router, callback = () => {}) {
 		})
 }
 
-export function login(form, router, callback = () => {}) {
+export function login(form, router, errorCallback = () => {}, successCallback = () => {}) {
 	axios.post(import.meta.env.VITE_BACKEND_URL + 'auth/login', form.value)
 		.then(res => {
 			setItemWithExpiry('token', res.data.data.token, res.data.data.expiresIn)
 			loadCart();
+			successCallback();
 			router.push({ name: 'home' })
 		})
 		.catch(err => {
-			callback(err);
+			errorCallback(err);
 		})
 }
 
@@ -32,11 +34,12 @@ function loadCart() {
 	})
 }
 
-export function logout(router, refresh = false) {
+export function logout(router, callback = () => {}) {
 	localStorage.removeItem('token')
-	if (refresh) {
+	nextTick(() => {
+		callback();
 		router.push({ name: 'login' })
-	}
+	})
 }
 
 export function getToken(router) {
@@ -60,7 +63,7 @@ export function getToken(router) {
 
 export function hasToken() {
 	const tokenStr = localStorage.getItem('token')
-	if (!tokenStr) {
+	if (tokenStr === null) {
 		return false
 	}
 	return true

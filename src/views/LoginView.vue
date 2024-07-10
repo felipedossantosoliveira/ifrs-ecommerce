@@ -1,13 +1,15 @@
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import Input from "@/components/Input.vue";
 import {useRouter} from "vue-router";
-import {login} from "@/composables/auth.js";
+import {hasToken, login} from "@/composables/auth.js";
 
 const router = useRouter();
 
+const emit = defineEmits(['refresh'])
+
 function submit() {
-  login(form, router, () => error.value = true)
+  login(form, router, () => error.value = true, () => emit('refresh'))
 }
 
 const form = ref({
@@ -16,6 +18,12 @@ const form = ref({
 })
 
 const error = ref(false)
+
+onMounted(() => {
+  if (hasToken()) {
+    router.push('/')
+  }
+})
 
 </script>
 <template>

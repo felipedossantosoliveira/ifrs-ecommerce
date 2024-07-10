@@ -1,8 +1,8 @@
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import Input from "@/components/Input.vue";
 import {useRouter} from "vue-router";
-import {register} from "@/composables/auth.js";
+import {hasToken, register} from "@/composables/auth.js";
 
 const router = useRouter();
 
@@ -17,6 +17,12 @@ const form = ref({
 })
 
 const error = ref(false)
+
+onMounted(() => {
+  if (hasToken()) {
+    router.push('/')
+  }
+})
 
 </script>
 <template>

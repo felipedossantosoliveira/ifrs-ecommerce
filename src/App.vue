@@ -1,11 +1,13 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useRoute } from 'vue-router'
 import CartView from './views/CartView.vue'
 import {onMounted, ref} from 'vue';
-import {hasToken} from "@/composables/auth.js";
+import {hasToken, logout} from "@/composables/auth.js";
 
 const route = useRoute()
+
+const router = useRouter()
 
 const showCart = ref(false)
 
@@ -18,6 +20,17 @@ const isLoggedIn = ref(false)
 onMounted(() => {
   isLoggedIn.value = hasToken();
 })
+
+function refreshData() {
+  isLoggedIn.value = hasToken();
+}
+
+function logoutPlataform() {
+  logout(router, () => {
+    refreshData()
+    console.log('logged out')
+  })
+}
 </script>
 
 <template>
@@ -30,20 +43,6 @@ onMounted(() => {
               <router-link to="/shop">
                 <span class="border border-transparent group-hover:bg-gray-400 group-hover:text-white group-hover:border-black px-0.5">
                   shop
-                </span>
-              </router-link>
-            </li>
-            <li class="group">
-              <router-link to="/">
-                <span class="border border-transparent group-hover:bg-gray-400 group-hover:text-white group-hover:border-black px-0.5">
-                looks
-                </span>
-              </router-link>
-            </li>
-            <li class="group">
-              <router-link to="/">
-                <span class="border border-transparent group-hover:bg-gray-400 group-hover:text-white group-hover:border-black px-0.5">
-                radio
                 </span>
               </router-link>
             </li>
@@ -67,6 +66,13 @@ onMounted(() => {
       <div class="w-full bg-white border-b border-neutral-500/50 h-full">
         <nav>
           <ul class="flex justify-end *:uppercase *:text-[8pt] *:py-1 *:px-4 *:cursor-pointer">
+            <li class="group">
+              <button @click="logoutPlataform()" v-if="isLoggedIn" to="/account/profile">
+                <span class="border border-transparent uppercase group-hover:bg-gray-400 group-hover:text-white group-hover:border-black px-0.5">
+                  logout
+                </span>
+              </button>
+            </li>
             <li class="group">
               <router-link v-if="isLoggedIn" to="/account/profile">
                 <span class="border border-transparent group-hover:bg-gray-400 group-hover:text-white group-hover:border-black px-0.5">
@@ -94,7 +100,7 @@ onMounted(() => {
   </header>
 
   <div class="mt-10">
-    <RouterView />
+    <RouterView @refresh="refreshData" />
   </div>
 
   <CartView v-if="showCart" @close="toggleCart" />

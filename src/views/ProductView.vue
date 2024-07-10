@@ -111,11 +111,6 @@ onMounted(() => {
             add to cart
           </button>
         </div>
-        <div v-show="!soldOut" class="mt-2">
-          <button class="w-full border border-black py-3 uppercase text-xs hover:bg-neutral-400/50 hover:text-black">
-            Checkout
-          </button>
-        </div>
         <div>
           <h1 class="text-xs mt-2 uppercase">Description</h1>
           <p class="text-xs mt-2 uppercase">
