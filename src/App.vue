@@ -6,13 +6,13 @@ const route = useRoute()
 </script>
 
 <template>
-  <header class="w-full fixed flex top-0 left-0 justify-between *:border-neutral-500/50">
+  <header class="w-full z-10 fixed flex top-0 left-0 justify-between *:border-neutral-500/50">
     <div class="w-full flex flex-col border-b">
       <div class="w-full bg-white border-b border-neutral-500/50 h-full">
         <nav>
           <ul class="flex *:uppercase *:text-[8pt] *:py-1 *:px-4 *:cursor-pointer">
             <li class="group">
-              <router-link to="/">
+              <router-link to="/shop">
                 <span class="border border-transparent group-hover:bg-gray-400 group-hover:text-white group-hover:border-black px-0.5">
                   shop
                 </span>

@@ -1,13 +1,23 @@
 import axios from "axios"
 
-export function login(form, router) {
+export function register(form, router, callback = () => {}) {
+	axios.post(import.meta.env.VITE_BACKEND_URL + 'auth/sign-up', form.value)
+		.then(res => {
+			router.push({ name: 'login' })
+		})
+		.catch(err => {
+			callback(err);
+		})
+}
+
+export function login(form, router, callback = () => {}) {
 	axios.post(import.meta.env.VITE_BACKEND_URL + 'auth/login', form.value)
 		.then(res => {
 			setItemWithExpiry('token', res.data.data.token, res.data.data.expiresIn)
 			router.push({ name: 'home' })
 		})
 		.catch(err => {
-			console.log(err)
+			callback(err);
 		})
 }
 
@@ -18,7 +28,7 @@ export function logout(router, refresh = false) {
 	}
 }
 
-function getToken(router) {
+export function getToken(router) {
 	const tokenStr = localStorage.getItem('token')
 	if (!tokenStr) {
 		router.push({ name: 'login' })
