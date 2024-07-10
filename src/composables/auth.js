@@ -48,7 +48,7 @@ export function getToken(router) {
 	const token = JSON.parse(tokenStr)
 	const now = new Date()
 	if (now.getTime() > token.expiry) {
-		localStorage.removeItem(key)
+		localStorage.removeItem('token')
 		router.push({ name: 'login' })
 		return null
 	}
@@ -56,6 +56,14 @@ export function getToken(router) {
 		refreshToken(token.value)
 	}
 	return token.value
+}
+
+export function hasToken() {
+	const tokenStr = localStorage.getItem('token')
+	if (!tokenStr) {
+		return false
+	}
+	return true
 }
 
 function refreshToken(token) {

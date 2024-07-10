@@ -2,7 +2,8 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { useRoute } from 'vue-router'
 import CartView from './views/CartView.vue'
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
+import {hasToken} from "@/composables/auth.js";
 
 const route = useRoute()
 
@@ -11,6 +12,12 @@ const showCart = ref(false)
 function toggleCart() {
   showCart.value = !showCart.value
 }
+
+const isLoggedIn = ref(false)
+
+onMounted(() => {
+  isLoggedIn.value = hasToken();
+})
 </script>
 
 <template>
@@ -61,9 +68,14 @@ function toggleCart() {
         <nav>
           <ul class="flex justify-end *:uppercase *:text-[8pt] *:py-1 *:px-4 *:cursor-pointer">
             <li class="group">
-              <router-link to="/account/login">
+              <router-link v-if="isLoggedIn" to="/account/profile">
                 <span class="border border-transparent group-hover:bg-gray-400 group-hover:text-white group-hover:border-black px-0.5">
-                  account
+                  profile
+                </span>
+              </router-link>
+              <router-link v-else to="/account/login">
+                <span class="border border-transparent group-hover:bg-gray-400 group-hover:text-white group-hover:border-black px-0.5">
+                  login
                 </span>
               </router-link>
             </li>
